@@ -60,7 +60,6 @@ class WebMarketLoader(MarketLoader):
         # print self._data
 
 
-def load_market(options):
+def load_market(start_date, end_date, tickers):
     loader = WebMarketLoader()
-    return loader.load(options['start_date'], options['end_date'],
-        options['tickers'])
+    return loader.load(start_date, end_date, tickers)

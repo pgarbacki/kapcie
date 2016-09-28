@@ -1,9 +1,14 @@
 from collections import OrderedDict
+from enum import Enum
+import numpy as np
+import pandas as pd
 import pprint
-import numpy
+
+from finance.feature import Feature, get_example, FeatureArgs
 
 
 class Stock(object):
+
     def __init__(self, ticker):
         if not ticker:
             raise Exception('empty ticker')
@@ -22,13 +27,25 @@ class Stock(object):
     def quote(self, date):
         if date < self._start or date > self._end:
             raise Exception('date', date, 'out of range', self._start,
-                self._end)
+                            self._end)
         rows = self._quotes.loc[self._quotes.index <= date]
         if rows.empty:
             raise Exception('date', date, 'not found')
-        i = numpy.argmin(date - rows.index.to_pydatetime())
+        i = np.argmin(date - rows.index.to_pydatetime())
         return self._quotes.iloc[i]['Adj Close']
 
+    def _features(self, features):
+        result = None
+        for date in self._quotes.index:
+            example = get_example(FeatureArgs(features, date, self._quotes))
+            if result is None:
+                result = example
+            else:
+                result = result.append(example)  # , ignore_index=True)
+        return result
+
+    def features_all(self):
+        return self._features([feature for feature in Feature])
 
     def to_debug_dict(self):
         result = OrderedDict()

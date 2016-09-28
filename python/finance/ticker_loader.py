@@ -3,6 +3,7 @@ import json
 
 from finance.ticker import Ticker
 
+
 class TickerLoader(object):
     __metaclass__ = abc.ABCMeta
 
@@ -28,6 +29,7 @@ class TickerLoader(object):
 
 
 class StringTickerLoader(TickerLoader):
+
     def initialize(self):
         return
 
@@ -42,6 +44,7 @@ class StringTickerLoader(TickerLoader):
 
 
 class JsonTickerLoader(TickerLoader):
+
     def initialize(self):
         return
 
@@ -55,17 +58,17 @@ class JsonTickerLoader(TickerLoader):
                     # convert from unicode
                     ticker = str(ticker)
                 ticker = Ticker(ticker, item['Name'], item['Exchange'],
-                    item['categoryName'], item['categoryNr'])
+                                item['categoryName'], item['categoryNr'])
                 tickers.append(ticker)
         return self._filter(tickers, symbols)
 
 
-def load_tickers(options):
-    if not options.ticker_file:
+def load_tickers(tickers, ticker_file):
+    if not ticker_file:
         loader = StringTickerLoader()
-        return loader.load(options.tickers)
+        return loader.load(tickers)
     symbols = None
-    if options.tickers:
-        symbols = options.tickers.split(',')
+    if tickers:
+        symbols = tickers.split(',')
     loader = JsonTickerLoader()
-    return loader.load(options.ticker_file, symbols)
+    return loader.load(ticker_file, symbols)
