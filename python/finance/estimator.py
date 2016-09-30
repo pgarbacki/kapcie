@@ -45,6 +45,7 @@ class Estimator(object):
         estimator = self._build()
         estimator.fit(input_fn=lambda: Estimator._prepare_input(
             examples), steps=steps)
+        print('DEBUG: weights', estimator.weights_)
 
     def evaluate(self, examples):
         estimator = self._load()

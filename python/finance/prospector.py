@@ -124,7 +124,6 @@ class Train(Command):
         estimator = LinearRegressionEstimator(options['model_dir'])
         estimator.train(examples, 1000)
         print('trained model written to', options['model_dir'])
-        print('DEBUG: weights', estimator.weights_)
 
 
 _COMMANDS = {
